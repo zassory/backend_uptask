@@ -1,5 +1,6 @@
 import { response } from "express"
 import Usuario from "../models/Usuario.js";
+import generarId from "../helpers/generarId.js";
 
 const register = async (req,res=response) => {
 
@@ -12,7 +13,8 @@ const register = async (req,res=response) => {
     }
 
     try{
-        const usuario = new Usuario(req.body);        
+        const usuario = new Usuario(req.body);
+        usuario.token = generarId();
         const usuarioAlmacenado = await usuario.save()
         res.json(usuarioAlmacenado);
 

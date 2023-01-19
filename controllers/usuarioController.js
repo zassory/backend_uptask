@@ -55,7 +55,12 @@ const authenticate = async (req , res = response) => {
     }
 }
 
+const confirm = async (req, res = response) => {
+    console.log(req.params);
+}
+
 export {
     register,
     authenticate,
+    confirm,
 };

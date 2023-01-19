@@ -23,6 +23,11 @@ const register = async (req,res=response) => {
     }    
 }
 
+const authenticate = async (req , res = response) => {
+    
+}
+
 export {
-    register,    
+    register,
+    authenticate,
 };

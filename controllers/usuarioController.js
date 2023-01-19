@@ -1,6 +1,7 @@
 import { response } from "express"
 import Usuario from "../models/Usuario.js";
 import generarId from "../helpers/generarId.js";
+import generarJWT from "../helpers/generarJWT.js";
 
 const register = async (req,res=response) => {
 
@@ -46,6 +47,7 @@ const authenticate = async (req , res = response) => {
             _id: usuario._id,
             nombre: usuario.nombre,
             email: usuario.email,
+            token: generarJWT(usuario._id),
         });
     }else{  
         const error = new Error("El Password es Incorrecto");

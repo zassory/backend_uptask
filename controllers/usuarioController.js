@@ -130,7 +130,8 @@ const nuevoPassword = async (req, res= response) => {
 }
 
 const perfil = async(req,res=response) => {
-    console.log('Desde Perfil');
+    const { usuario } = req;
+    res.json(usuario);
 }
 
 export {

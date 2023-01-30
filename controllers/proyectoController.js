@@ -2,7 +2,9 @@ import { request , response } from "express";
 import Proyecto from "../models/Proyecto.js";
 
 const obtenerProyectos = async(req = request,res = response) => {
+    const proyectos = await Proyecto.find().where("creador").equals(req.usuario);
 
+    res.status(200).json(proyectos);
 }
 
 const nuevoProyecto = async(req = request,res = response) => {

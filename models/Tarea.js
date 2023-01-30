@@ -6,7 +6,7 @@ const tareaSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
-    description: {
+    descripcion: {
         type: String,
         trim: true,
         required: true,

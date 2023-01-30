@@ -1,5 +1,6 @@
 import { request , response } from "express";
 import Proyecto from "../models/Proyecto.js";
+import mongoose from "mongoose";
 
 const obtenerProyectos = async(req = request,res = response) => {
     const proyectos = await Proyecto.find().where("creador").equals(req.usuario);
@@ -20,7 +21,32 @@ const nuevoProyecto = async(req = request,res = response) => {
 };
 
 const obtenerProyecto = async(req = request,res = response) => {
+    const { id } = req.params;
 
+    const valid = mongoose.Types.ObjectId.isValid(id);
+
+    if(!valid){
+        const error = new Error('Id no válido');
+        return res.status(404).json({msg: error.message});
+    }
+    
+    //try{
+        const proyecto = await Proyecto.findById(id);
+
+    if(!proyecto){
+        const error = new Error("No Encontrado");
+        return res.status(404).json({msg: error.message});
+    }
+
+    if(proyecto.creador.toString() !== req.usuario._id.toString() ){
+        const error = new Error("Acción No Válida");
+        return res.status(401).json({ msg: error.message });
+    }            
+    
+    res.json(proyecto);
+    //} catch(err){        
+    //    return res.status(404).json({ msg: "Id no válido"});
+    //};
 }
 
 const editarProyecto = async(req = request,res = response) => {

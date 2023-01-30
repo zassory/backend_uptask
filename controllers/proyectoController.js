@@ -1,11 +1,18 @@
 import { request , response } from "express";
 import Proyecto from "../models/Proyecto.js";
 import mongoose from "mongoose";
+import generarError from "../helpers/generarError.js";
 
 const obtenerProyectos = async(req = request,res = response) => {
-    const proyectos = await Proyecto.find().where("creador").equals(req.usuario);
 
-    res.status(200).json(proyectos);
+    try{
+        const proyectos = await Proyecto.find().where("creador").equals(req.usuario);
+        res.status(200).json(proyectos);
+    } catch(err){
+        const error = new Error('Accion no v{alida');
+        return res.status(404).json({msg: error.message});
+    }
+    
 }
 
 const nuevoProyecto = async(req = request,res = response) => {
@@ -28,6 +35,8 @@ const obtenerProyecto = async(req = request,res = response) => {
     if(!valid){
         const error = new Error('Id no válido');
         return res.status(404).json({msg: error.message});
+        //const err = generarError('Id no válido',404);
+        //return err;
     }
     
     //try{
@@ -83,7 +92,30 @@ const editarProyecto = async(req = request,res = response) => {
 }
 
 const eliminarProyecto = async(req = request,res = response) => {
+    const { id } = req.params;
+    const valid = mongoose.Types.ObjectId.isValid(id);
+    if(!valid){
+        const error = new Error('Id no válido');
+        return res.status(404).json({msg:error.message});
+    }
+    const proyecto = await Proyecto.findById(id);
+    if(!proyecto){
+        const error = new Error("No encontrado");
+        return res.status(404).json({msg: error.message});
+    }
+    if(proyecto.creador.toString() !== req.usuario._id.toString() ){
+        const error = new Error("Acción no Válida");
+        return res.status(401).json({ msg: error.message });
+    }
 
+    try{
+        await proyecto.deleteOne();
+        res.json({msg: "Proyecto Eliminado"});
+    }catch(err){
+        //const error = new Error('Acción no válida');
+        //res.status(404).json({msg:error.message});
+        console.log(error);
+    }
 }
 
 const agregarColaborador = async(req = request,res = response) => {

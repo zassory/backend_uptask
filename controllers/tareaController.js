@@ -33,7 +33,19 @@ const agregarTarea = async(req = request , res = response ) => {
 }
 
 const obtenerTarea = async(req = request , res = response ) => {
+    const { id } = req.params;
     
+    const tarea = await Tarea.findById(id).populate("proyecto");
+    if(!tarea){
+        const error = new Error("Tarea no encontrada");
+        return res.status(404).json({msg: error.message});
+    }
+    if(tarea.proyecto.creador.toString() !== req.usuario._id.toString() ){
+        const error = new Error("Acción no válida");
+        return res.status(403).json({msg: error.message});
+    }
+
+    res.json(tarea);
 }
 
 const actualizarTarea = async(req = request , res = response ) => {

@@ -1,12 +1,21 @@
 import { request , response } from "express";
+import Proyecto from "../models/Proyecto.js";
 
 const obtenerProyectos = async(req = request,res = response) => {
 
 }
 
 const nuevoProyecto = async(req = request,res = response) => {
+    const proyecto = new Proyecto(req.body);
+    proyecto.creador = req.usuario._id;
 
-}
+    try{
+        const proyectoAlmacenado = await proyecto.save();
+        res.json(proyectoAlmacenado);
+    }catch(error){
+        console.log(error);
+    }
+};
 
 const obtenerProyecto = async(req = request,res = response) => {
 

@@ -1,7 +1,7 @@
 import { request , response } from "express";
 import Proyecto from "../models/Proyecto.js";
 import mongoose from "mongoose";
-import generarError from "../helpers/generarError.js";
+//import generarError from "../helpers/generarError.js";
 
 const obtenerProyectos = async(req = request,res = response) => {
 

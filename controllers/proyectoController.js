@@ -51,9 +51,15 @@ const obtenerProyecto = async(req = request,res = response) => {
     if(proyecto.creador.toString() !== req.usuario._id.toString() ){
         const error = new Error("Acción No Válida");
         return res.status(401).json({ msg: error.message });
-    }            
-    
-    res.json(proyecto);
+    }
+
+    // Obtener las tareas del proyecto
+    const tareas = await Tarea.find().where("proyecto").equals(proyecto.id);
+    res.json({
+        proyecto,
+        tareas,
+    });
+        
     //} catch(err){        
     //    return res.status(404).json({ msg: "Id no válido"});
     //};
@@ -127,26 +133,6 @@ const eliminarColaborador = async(req = request,res = response) => {
 
 }
 
-const obtenerTareas = async(req = request,res = response) => {
-    const { id } = req.params;
-    
-    const valid = mongoose.Types.ObjectId.isValid(id);
-    if(!valid){
-        const error = new Error("Id no válido");
-        return res.status(404).json({msg:error.message});
-    }
-    const existeProyecto = await Proyecto.findById(id);
-    if(!existeProyecto){
-        const error = new Error("No encontrado");
-        return res.status(404).json({msg: error.message });
-    }
-
-    //Tienes que ser el creador del proyecto o colaborador
-
-    const tareas = await Tarea.find().where("proyecto").equals(id);
-    res.json(tareas);
-}
-
 export {
     obtenerProyectos,
     nuevoProyecto,
@@ -155,5 +141,4 @@ export {
     eliminarProyecto,
     agregarColaborador,
     eliminarColaborador,
-    obtenerTareas,
 }

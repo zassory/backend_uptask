@@ -87,7 +87,30 @@ const actualizarTarea = async(req = request , res = response ) => {
 }
 
 const eliminarTarea = async(req = request , res = response ) => {
-    
+    const { id } = req.params;
+
+    const valid = mongoose.Types.ObjectId.isValid(id);
+    if(!valid){
+        const error = new Error("Id no válido");
+        return res.status(404).json({msg:error.message});
+    }
+ 
+    const tarea = await Tarea.findById(id).populate("proyecto");
+    if(!tarea){
+        const error = new Error("Tarea no encontrada");
+        return res.status(404).json({msg:error.message});
+    }
+    if(tarea.proyecto.creador.toString() !== req.usuario._id.toString() ){
+        const error = new Error("Acción no válida");
+        return res.status(403).json({msg: error.message});
+    }
+
+    try{
+        await tarea.deleteOne();
+        res.json({msg:"Tarea Eliminada"});
+    }catch(error){
+        console.log(error);
+    }
 }
 
 const cambiarEstado = async(req = request , res = response ) => {

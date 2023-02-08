@@ -110,6 +110,7 @@ const olvidePassword = async (req, res = response) => {
 
 const comprobarToken = async (req, res = response) => {
     const { token } = req.params;
+    
     const tokenValido = await Usuario.findOne({ token });
 
     if(tokenValido){
@@ -123,7 +124,7 @@ const comprobarToken = async (req, res = response) => {
 const nuevoPassword = async (req, res= response) => {
 
     const { token } = req.params;
-    const { password } = req.body
+    const { password } = req.body;
 
     //Primero comprobar si el token es valido
     const usuario = await Usuario.findOne({ token });
@@ -135,15 +136,12 @@ const nuevoPassword = async (req, res= response) => {
             await usuario.save();
             res.json({msg: "Password Modificado Correctamente"});
         }catch(error){
-            console.log(error);
+            
         }
     }else{
         const error = new Error("Token no válido");
         return res.status(404).json({msg: error.message});
     }
-
-    console.log(token);
-    console.log(password);
 }
 
 const perfil = async(req,res=response) => {

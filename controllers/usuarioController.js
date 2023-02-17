@@ -44,13 +44,13 @@ const authenticate = async (req , res = response) => {
         return res.status(404).json({ msg: error.message });
     }
     
-    //Comprobar si el usuario esya confirmado
+    //Comprobar si el usuario esta confirmado
     if(!usuario.confirmado){
         const error = new Error("Tu cuenta no ha sido activada, revisa tu correo");
         return res.status(403).json({ msg: error.message });
     }
 
-    //Comprobar el pássword
+    //Comprobar el password
     if(await usuario.comprobarPassword(password)){
         res.json({
             _id: usuario._id,

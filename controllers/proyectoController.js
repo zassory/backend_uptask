@@ -54,11 +54,11 @@ const obtenerProyecto = async(req = request,res = response) => {
     }
 
     // Obtener las tareas del proyecto
-    const tareas = await Tarea.find().where("proyecto").equals(proyecto.id);
-    res.json({
+    //const tareas = await Tarea.find().where("proyecto").equals(proyecto.id);
+    res.json(
         proyecto,
-        tareas,
-    });
+        //
+    );
         
     //} catch(err){        
     //    return res.status(404).json({ msg: "Id no válido"});

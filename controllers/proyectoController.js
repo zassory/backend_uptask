@@ -7,7 +7,8 @@ import Tarea from "../models/Tarea.js";
 const obtenerProyectos = async(req = request,res = response) => {
 
     try{
-        const proyectos = await Proyecto.find().where("creador").equals(req.usuario);
+        const proyectos = await Proyecto.find().where("creador").equals(req.usuario)
+        .select('-tareas');
         res.status(200).json(proyectos);
     } catch(err){
         const error = new Error('Accion no v{alida');
@@ -41,7 +42,7 @@ const obtenerProyecto = async(req = request,res = response) => {
     }
     
     //try{
-        const proyecto = await Proyecto.findById(id);
+    const proyecto = await Proyecto.findById(id).populate('tareas');
 
     if(!proyecto){
         const error = new Error("No Encontrado");

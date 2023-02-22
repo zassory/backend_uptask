@@ -41,7 +41,9 @@ const obtenerProyecto = async(req = request,res = response) => {
     }
     
     //try{
-    const proyecto = await Proyecto.findById(id).populate('tareas');
+    const proyecto = await Proyecto.findById(id)
+        .populate("tareas")
+        .populate("colaboradores", "nombre email");
 
     if(!proyecto){
         const error = new Error("No Encontrado");

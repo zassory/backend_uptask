@@ -1,8 +1,7 @@
 import { request , response } from "express";
 import Proyecto from "../models/Proyecto.js";
 import mongoose from "mongoose";
-import Tarea from "../models/Tarea.js";
-//import generarError from "../helpers/generarError.js";
+import Usuario from "../models/Usuario.js";
 
 const obtenerProyectos = async(req = request,res = response) => {
 
@@ -126,6 +125,18 @@ const eliminarProyecto = async(req = request,res = response) => {
     }
 }
 
+const buscarColaborador = async(req = request,res = response) => {
+    const { email } = req.body;
+    const usuario = await Usuario.findOne({email}).select('-confirmado -createdAt -password -token -updatedAt -__v');
+
+    if(!usuario){
+        const error = new Error("Usuario no encontrado");
+        return res.status(404).json({msg: error.message});
+    }
+
+    res.json(usuario);
+}
+
 const agregarColaborador = async(req = request,res = response) => {
 
 }
@@ -140,6 +151,7 @@ export {
     obtenerProyecto,
     editarProyecto,
     eliminarProyecto,
+    buscarColaborador,
     agregarColaborador,
     eliminarColaborador,
 }

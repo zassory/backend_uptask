@@ -10,7 +10,7 @@ const obtenerProyectos = async(req = request,res = response) => {
         .select('-tareas');
         res.status(200).json(proyectos);
     } catch(err){
-        const error = new Error('Accion no v{alida');
+        const error = new Error('Accion no valida');
         return res.status(404).json({msg: error.message});
     }
     

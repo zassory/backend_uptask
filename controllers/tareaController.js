@@ -117,7 +117,7 @@ const eliminarTarea = async(req = request , res = response ) => {
 }
 
 const cambiarEstado = async(req = request , res = response ) => {
-    
+    console.log(req.params.id);
 }
 
 export {

@@ -41,13 +41,12 @@ const obtenerProyecto = async(req = request,res = response) => {
     if(!valid){
         const error = new Error('Id no válido');
         return res.status(404).json({msg: error.message});
-        //const err = generarError('Id no válido',404);
-        //return err;
     }
-    
-    //try{
+        
     const proyecto = await Proyecto.findById(id)
-        .populate("tareas")
+        .populate({ 
+            path: "tareas", 
+            populate: {path: "completado", select: "nombre"} })
         .populate("colaboradores", "nombre email");
 
     if(!proyecto){
@@ -60,17 +59,10 @@ const obtenerProyecto = async(req = request,res = response) => {
         const error = new Error("Acción No Válida");
         return res.status(401).json({ msg: error.message });
     }
-
-    // Obtener las tareas del proyecto
-    //const tareas = await Tarea.find().where("proyecto").equals(proyecto.id);
+    
     res.json(
         proyecto,
-        //
-    );
-        
-    //} catch(err){        
-    //    return res.status(404).json({ msg: "Id no válido"});
-    //};
+    );            
 }
 
 const editarProyecto = async(req = request,res = response) => {

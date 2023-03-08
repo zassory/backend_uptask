@@ -29,9 +29,15 @@ const tareaSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Proyecto",
     },
-}, {
-    timestamps: true
-}
+    completado: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Usuario",
+        default: null,
+    },
+    },
+    {
+        timestamps: true
+    }
 );
 const Tarea = mongoose.model("Tarea",tareaSchema);
 export default Tarea;

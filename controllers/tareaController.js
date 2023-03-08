@@ -109,7 +109,11 @@ const eliminarTarea = async(req = request , res = response ) => {
     }
 
     try{
-        await tarea.deleteOne();
+        const proyecto = await Proyecto.findById(tarea.proyecto);
+        proyecto.tareas.pull(tarea._id);
+                
+        await Promise.allSettled([await proyecto.save(),await tarea.deleteOne()]);
+
         res.json({msg:"La Tarea se eliminó"});
     }catch(error){
         console.log(error);
@@ -117,7 +121,29 @@ const eliminarTarea = async(req = request , res = response ) => {
 }
 
 const cambiarEstado = async(req = request , res = response ) => {
-    console.log(req.params.id);
+    const { id } = req.params;
+
+    const valid = mongoose.Types.ObjectId.isValid(id);
+    if(!valid){
+        const error = new Error("Id no válido");
+        return res.status(404).json({msg:error.message});
+    }
+ 
+    const tarea = await Tarea.findById(id).populate("proyecto");
+    if(!tarea){
+        const error = new Error("Tarea no encontrada");
+        return res.status(404).json({msg:error.message});
+    }
+
+    if(tarea.proyecto.creador.toString() !== req.usuario._id.toString() && !tarea.proyecto.
+    colaboradores.some( colaborador => colaborador._id.toString() === req.usuario._id.toString() ) ){
+        const error = new Error("Acción no válida");
+        return res.status(403).json({msg: error.message});
+    }
+
+    tarea.estado = !tarea.estado;
+    await tarea.save();
+    res.json(tarea);
 }
 
 export {

@@ -43,7 +43,7 @@ const servidor = app.listen(PORT, () => {
 });
 
 // Socket.io
-import {} from 'socket.io';
+import { Server } from 'socket.io';
 
 const io = new Server(servidor, {
     pingTimeout: 60000,
@@ -56,5 +56,5 @@ io.on("connection", (socket) => {
     console.log("Conectado a socket.io");
 
     //Definir los eventos de socket io
-    
+
 })

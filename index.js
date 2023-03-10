@@ -56,18 +56,11 @@ io.on("connection", (socket) => {
     console.log("Conectado a socket.io");
 
    //Definir los eventos de socket io
-   socket.on("abrir proyecto", (proyecto) => {
-        //Saber en que proyecto estoy me permite entrar en este cuarto
-        //Entro a un cuarto
-        socket.join(proyecto);
-
-        
-
-
-        //El servidor le esta enviando una respuesta a todos los 
-        //usuarios que esten conectados
-        //A todos los que abrieron una conexion con socket io
-        //socket.to("63eaa6a496ca8776d4a371c9").emit('respuesta', {nombre:'Nicolas'});
+   socket.on("abrir proyecto", (proyecto) => {        
+        socket.join(proyecto);        
    });
 
+   socket.on("nueva tarea" , tarea => {        
+        socket.to(tarea.proyecto).emit('tarea agregada', tarea);        
+   })
 });

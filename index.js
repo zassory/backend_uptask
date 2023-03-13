@@ -56,16 +56,23 @@ io.on("connection", (socket) => {
     console.log("Conectado a socket.io");
 
    //Definir los eventos de socket io
-   socket.on("abrir proyecto", (proyecto) => {        
-        socket.join(proyecto);        
+   socket.on("abrir proyecto", (proyecto) => {
+        socket.join(proyecto);
    });
 
-   socket.on("nueva tarea" , tarea => {        
-        socket.to(tarea.proyecto).emit('tarea agregada', tarea);        
+   socket.on("nueva tarea" , tarea => {
+        socket.to(tarea.proyecto).emit('tarea agregada', tarea);
    });
 
    socket.on('eliminar tarea', tarea => {
         const proyecto = tarea.proyecto;
         socket.to(proyecto).emit('tarea eliminada', tarea);
    });
+
+   socket.on('actualizar tarea', tarea => {
+        const proyecto = tarea.proyecto._id;
+        socket.to(proyecto).emit("tarea actualizada", tarea);
+   })
+
+   
 });
